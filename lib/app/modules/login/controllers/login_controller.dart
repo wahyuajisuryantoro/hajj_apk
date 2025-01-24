@@ -9,8 +9,10 @@ class LoginController extends GetxController {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
- final StorageService _storage = StorageService();
-  
+  final StorageService _storage = StorageService();
+
+  final isPasswordVisible = false.obs;
+
   Future<void> login() async {
     final String username = usernameController.text;
     final String password = passwordController.text;
@@ -32,7 +34,7 @@ class LoginController extends GetxController {
         final data = jsonDecode(response.body);
         final mitraData = data['user'];
 
-        await _storage.saveMitraData(mitraData);      
+        await _storage.saveMitraData(mitraData);
         Get.snackbar(
           'Success',
           data['message'],
@@ -58,6 +60,10 @@ class LoginController extends GetxController {
         colorText: Colors.white,
       );
     }
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
   }
 
   Future<void> logout() async {

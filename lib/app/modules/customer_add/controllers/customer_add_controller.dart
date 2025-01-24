@@ -187,6 +187,43 @@ class CustomerAddController extends GetxController {
     }
   }
 
+   void showImageOptions(bool isKtp) {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Opsi Foto'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: Text('Ganti Foto'),
+              onTap: () {
+                Get.back();
+                if (isKtp) {
+                  pickKtpPicture();
+                } else {
+                  pickProfilePicture();
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: Text('Hapus Foto'),
+              onTap: () {
+                Get.back();
+                if (isKtp) {
+                  ktpPicturePath.value = '';
+                } else {
+                  profilePicturePath.value = '';
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void onClose() {
     usernameController.dispose();

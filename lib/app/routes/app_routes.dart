@@ -17,6 +17,8 @@ abstract class Routes {
   static const AKUN = _Paths.AKUN;
   static const MITRA_ADD = _Paths.MITRA_ADD;
   static const CUSTOMER_ADD = _Paths.CUSTOMER_ADD;
+  static const BONUS = _Paths.BONUS;
+  static const REGISTER = _Paths.REGISTER;
 }
 
 abstract class _Paths {
@@ -36,4 +38,6 @@ abstract class _Paths {
   static const AKUN = '/akun';
   static const MITRA_ADD = '/mitra-add';
   static const CUSTOMER_ADD = '/customer-add';
+  static const BONUS = '/bonus';
+  static const REGISTER = '/register';
 }

@@ -6,6 +6,8 @@ import '../modules/berita-detail/bindings/berita_detail_binding.dart';
 import '../modules/berita-detail/views/berita_detail_view.dart';
 import '../modules/berita_all/bindings/berita_all_binding.dart';
 import '../modules/berita_all/views/berita_all_view.dart';
+import '../modules/bonus/bindings/bonus_binding.dart';
+import '../modules/bonus/views/bonus_view.dart';
 import '../modules/customer/bindings/customer_binding.dart';
 import '../modules/customer/views/customer_view.dart';
 import '../modules/customer_add/bindings/customer_add_binding.dart';
@@ -26,6 +28,8 @@ import '../modules/program-all/bindings/program_all_binding.dart';
 import '../modules/program-all/views/program_all_view.dart';
 import '../modules/program-detail/bindings/program_detail_binding.dart';
 import '../modules/program-detail/views/program_detail_view.dart';
+import '../modules/register/bindings/register_binding.dart';
+import '../modules/register/views/register_view.dart';
 
 part 'app_routes.dart';
 
@@ -106,6 +110,16 @@ class AppPages {
       name: _Paths.CUSTOMER_ADD,
       page: () => const CustomerAddView(),
       binding: CustomerAddBinding(),
+    ),
+    GetPage(
+      name: _Paths.BONUS,
+      page: () => const BonusView(),
+      binding: BonusBinding(),
+    ),
+    GetPage(
+      name: _Paths.REGISTER,
+      page: () => const RegisterView(),
+      binding: RegisterBinding(),
     ),
   ];
 }

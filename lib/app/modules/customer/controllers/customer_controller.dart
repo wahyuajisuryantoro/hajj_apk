@@ -53,7 +53,7 @@ class CustomerController extends GetxController {
       ).timeout(Duration(seconds: 30));
 
       final data = jsonDecode(response.body);
-      print('Full Response: $data'); // Debug full response
+      print('Full Response: $data');
 
       if (response.statusCode == 200) {
         customerList.assignAll(List<Map<String, dynamic>>.from(data['data']));
@@ -118,8 +118,8 @@ class CustomerController extends GetxController {
         _buildDetailItem('Kode Customer', customer['code']),
         _buildDetailItem('Username', customer['username']),
         _buildDetailItem('Kode Referral', customer['referral_code']),
-        _buildDetailItem('Level', customer['level']),
-        _buildDetailItem('Status', customer['status']),
+        _buildDetailItem('l', customer['level']),
+        _buildDetailItem('Program', customer['code_program']),
 
         const SizedBox(height: 20),
         _buildSectionTitle('Informasi Pribadi'),

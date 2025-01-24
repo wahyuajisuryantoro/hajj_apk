@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
 
-class AkunController extends GetxController {
-  //TODO: Implement AkunController
+class BonusController extends GetxController {
+  //TODO: Implement BonusController
 
   final count = 0.obs;
-  final name = 'John Doe'.obs;
-  final userId = '123456789'.obs;
   @override
   void onInit() {
     super.onInit();

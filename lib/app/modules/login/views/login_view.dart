@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:hajj/app/routes/app_pages.dart';
 import 'package:hajj/app/utility/app_colors.dart';
 import 'package:hajj/app/utility/app_responsive.dart';
 import 'package:hajj/app/utility/app_text.dart';
 import '../controllers/login_controller.dart';
-
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
@@ -37,7 +38,7 @@ class LoginView extends GetView<LoginController> {
               ),
               SizedBox(height: AppResponsive.height(context, 4)),
               Text(
-                'Selamat Datang, Mitra Hasanah',
+                'Selamat Datang, Mitra HAJJ',
                 textAlign: TextAlign.center,
                 style: AppText.heading3(color: Colors.white),
               ),
@@ -58,22 +59,37 @@ class LoginView extends GetView<LoginController> {
                 style: AppText.body2(color: Colors.white),
               ),
               SizedBox(height: AppResponsive.height(context, 2)),
-              TextFormField(
-                controller: controller.passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: AppText.body2(color: Colors.white),
-                  prefixIcon: Icon(Icons.lock, color: Colors.white),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                style: AppText.body2(color: Colors.white),
-              ),
+              Obx(() => TextFormField(
+                    controller: controller.passwordController,
+                    obscureText: !controller.isPasswordVisible.value,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: AppText.body2(color: Colors.white),
+                      prefixIcon: Icon(Icons.lock, color: Colors.white),
+                      suffixIcon: IconButton(
+                        onPressed: controller.togglePasswordVisibility,
+                        icon: SvgPicture.asset(
+                          controller.isPasswordVisible.value
+                              ? 'assets/icons/eye_on.svg'
+                              : 'assets/icons/eye_off.svg',
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                              Colors.white, BlendMode.srcIn),
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints:
+                            const BoxConstraints(minWidth: 40, minHeight: 40),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: AppText.body2(color: Colors.white),
+                  )),
               // SizedBox(height: AppResponsive.height(context, 2)),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.end,
@@ -85,28 +101,49 @@ class LoginView extends GetView<LoginController> {
               //   ],
               // ),
               SizedBox(height: AppResponsive.height(context, 4)),
-              ElevatedButton(
-                onPressed: controller.login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.green,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppResponsive.width(context, 20),
-                    vertical: AppResponsive.height(context, 2),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: controller.login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppResponsive.width(context, 20),
+                      vertical: AppResponsive.height(context, 2),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  child: Text(
+                    'Login',
+                    style: AppText.body1(color: Colors.white),
                   ),
-                ),
-                child: Text(
-                  'Login',
-                  style: AppText.body1(color: Colors.white),
                 ),
               ),
               SizedBox(height: AppResponsive.height(context, 2)),
-              Text(
-                'Daftar Akun',
-                style: AppText.body3(color: Colors.white),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Belum punya akun? ',
+                    style: AppText.body3(color: Colors.white),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.REGISTER);
+                    },
+                    child: Text(
+                      'Daftar Sekarang',
+                      style: AppText.body2(
+                        color: Colors.white,
+                      ).copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
