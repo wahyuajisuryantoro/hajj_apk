@@ -11,4 +11,5 @@ class AppColors {
   static const Color softWhite = Color(0xFFFAFAFA);
   static const Color cardGrey = Color(0xFFF0F0F0);
   static const Color softOrange = Color(0xFFFFF3E9);
+  static const Color red = Color(0xFFE53935);
 }

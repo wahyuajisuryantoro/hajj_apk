@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   final StorageService _storage = StorageService();
 
   final isPasswordVisible = false.obs;
+  var isLoading = false.obs;
 
   Future<void> login() async {
     final String username = usernameController.text;
@@ -59,6 +60,8 @@ class LoginController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 

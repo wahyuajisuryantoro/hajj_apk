@@ -19,6 +19,11 @@ abstract class Routes {
   static const CUSTOMER_ADD = _Paths.CUSTOMER_ADD;
   static const BONUS = _Paths.BONUS;
   static const REGISTER = _Paths.REGISTER;
+  static const AKUN_PROFILE_EDIT = _Paths.AKUN_PROFILE_EDIT;
+  static const AKUN_PASSWORD_EDIT = _Paths.AKUN_PASSWORD_EDIT;
+  static const JAMAAH_LIST = _Paths.JAMAAH_LIST;
+  static const SYARAT_KETENTUAN = _Paths.SYARAT_KETENTUAN;
+  static const KEBIJAKAN_PRIVASI = _Paths.KEBIJAKAN_PRIVASI;
 }
 
 abstract class _Paths {
@@ -40,4 +45,9 @@ abstract class _Paths {
   static const CUSTOMER_ADD = '/customer-add';
   static const BONUS = '/bonus';
   static const REGISTER = '/register';
+  static const AKUN_PROFILE_EDIT = '/akun-profile-edit';
+  static const AKUN_PASSWORD_EDIT = '/akun-password-edit';
+  static const JAMAAH_LIST = '/jamaah-list';
+  static const SYARAT_KETENTUAN = '/syarat-ketentuan';
+  static const KEBIJAKAN_PRIVASI = '/kebijakan-privasi';
 }

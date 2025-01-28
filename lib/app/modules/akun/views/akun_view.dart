@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:hajj/app/components/bottom_navbar/widget_bottom_navbar.dart';
+import 'package:hajj/app/routes/app_pages.dart';
 import 'package:hajj/app/utility/app_colors.dart';
 import 'package:hajj/app/utility/app_responsive.dart';
 import 'package:hajj/app/utility/app_text.dart';
@@ -53,6 +56,7 @@ class AkunView extends GetView<AkunController> {
             left: 20,
             right: 20,
             child: Card(
+              color: AppColors.softWhite,
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -61,32 +65,99 @@ class AkunView extends GetView<AkunController> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: AppColors.softOrange,
-                      child: Icon(Icons.person,
-                          size: 40, color: AppColors.primary),
-                    ),
+                    Obx(() => CircleAvatar(
+                          radius: 30,
+                          backgroundColor: AppColors.softOrange,
+                          child: controller
+                                      .mitraData.value['picture_profile'] !=
+                                  null
+                              ? ClipOval(
+                                  child: Image.network(
+                                    controller
+                                        .mitraData.value['picture_profile'],
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                    errorBuilder:
+                                        (context, error, stackTrace) => Text(
+                                      controller.getInitials(
+                                          controller.mitraData.value['name'] ??
+                                              ''),
+                                      style: AppText.heading3(
+                                          color: AppColors.primary),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  controller.getInitials(
+                                      controller.mitraData.value['name'] ?? ''),
+                                  style: AppText.heading3(
+                                      color: AppColors.primary),
+                                ),
+                        )),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'John Doe',
-                            style: AppText.body1(color: Colors.black),
-                          ),
-                          Text(
-                            'ID: 123456789',
-                            style: AppText.body3(color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                      child: Obx(() => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.mitraData.value['name'] ??
+                                    'Loading...',
+                                style: AppText.body1(color: Colors.black),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    controller.mitraData.value['code'] ??
+                                        'Loading...',
+                                    style: AppText.body3(color: Colors.grey),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.copy,
+                                        size: 16, color: Colors.grey),
+                                    onPressed: () {
+                                      Clipboard.setData(ClipboardData(
+                                          text: controller
+                                                  .mitraData.value['code'] ??
+                                              ''));
+                                      Get.snackbar(
+                                        'Success',
+                                        'Kode mitra berhasil disalin',
+                                        backgroundColor: AppColors.green,
+                                        colorText: Colors.white,
+                                      );
+                                    },
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(minWidth: 24),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.edit, color: AppColors.primary),
+                      onPressed: () {
+                        Get.toNamed(Routes.AKUN_PROFILE_EDIT, arguments: {
+                          'name': controller.mitraData.value['name'],
+                          'phone': controller.mitraData.value['phone'],
+                          'email': controller.mitraData.value['email'],
+                          'birth_place':
+                              controller.mitraData.value['birth_place'],
+                          'birth_date':
+                              controller.mitraData.value['birth_date'],
+                          'address': controller.mitraData.value['address'],
+                          'picture_profile':
+                              controller.mitraData.value['picture_profile']
+                        });
+                      },
+                      icon: SvgPicture.asset(
+                        'assets/icons/edit.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                            AppColors.primary, BlendMode.srcIn),
+                      ),
                     ),
                   ],
                 ),
@@ -104,34 +175,47 @@ class AkunView extends GetView<AkunController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Account Settings',
+          Text('Pengaturan Akun',
               style: AppText.body1(color: AppColors.primary)),
           const SizedBox(height: 16),
           _buildMenuCard(
-            icon: Icons.lock_outline,
+            svgIconPath: 'assets/icons/password-setting.svg',
             title: 'Password Settings',
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(Routes.AKUN_PASSWORD_EDIT);
+            },
           ),
           _buildMenuCard(
-            icon: Icons.people_outline,
+            svgIconPath: 'assets/icons/jamaah.svg',
             title: 'List Jamaah',
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(Routes.JAMAAH_LIST);
+            },
           ),
           _buildMenuCard(
-            icon: Icons.policy_outlined,
+            svgIconPath: 'assets/icons/kebijakan.svg',
             title: 'Kebijakan dan Privasi',
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(Routes.KEBIJAKAN_PRIVASI);
+            },
+          ),
+          _buildMenuCard(
+            svgIconPath: 'assets/icons/terms.svg',
+            title: 'Syarat dan Ketentuan',
+            onTap: () {
+              Get.toNamed(Routes.SYARAT_KETENTUAN);
+            },
           ),
           const SizedBox(height: 24),
           _buildActionButton(
-            icon: Icons.logout,
             title: 'Logout',
             color: AppColors.orange200,
-            onTap: () {},
+            onTap: () {
+              controller.logout();
+            },
           ),
           const SizedBox(height: 12),
           _buildActionButton(
-            icon: Icons.delete_outline,
             title: 'Hapus Akun',
             color: Colors.red,
             onTap: () {},
@@ -142,7 +226,7 @@ class AkunView extends GetView<AkunController> {
   }
 
   Widget _buildMenuCard({
-    required IconData icon,
+    required String svgIconPath,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -155,8 +239,19 @@ class AkunView extends GetView<AkunController> {
         side: BorderSide(color: Colors.grey.withOpacity(0.2)),
       ),
       child: ListTile(
-        leading: Icon(icon, color: AppColors.primary),
-        title: Text(title, style: AppText.body2()),
+        leading: SvgPicture.asset(
+          svgIconPath,
+          width: 24,
+          height: 24,
+          colorFilter: const ColorFilter.mode(
+            AppColors.primary,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: Text(
+          title,
+          style: AppText.body2(),
+        ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,
       ),
@@ -164,17 +259,19 @@ class AkunView extends GetView<AkunController> {
   }
 
   Widget _buildActionButton({
-    required IconData icon,
     required String title,
     required Color color,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
+    return Container(
+      height: 50,
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: onTap,
-        icon: Icon(icon, color: Colors.white),
-        label: Text(title),
+        label: Text(
+          title,
+          style: AppText.body2(),
+        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: Colors.white,

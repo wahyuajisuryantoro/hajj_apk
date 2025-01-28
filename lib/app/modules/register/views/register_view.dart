@@ -19,7 +19,9 @@ class RegisterView extends GetView<RegisterController> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: AppResponsive.height(context, 4),),
+                SizedBox(
+                  height: AppResponsive.height(context, 4),
+                ),
                 Text(
                   'Pendaftaran Mitra',
                   style: AppText.heading3(color: AppColors.primary),
@@ -55,10 +57,15 @@ class RegisterView extends GetView<RegisterController> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Checkbox(value: true, onChanged: (bool? value) {}),
+                    Obx(() => Checkbox(
+                          value: controller.agreedToTerms.value,
+                          onChanged: (bool? value) {
+                            controller.agreedToTerms.value = value ?? false;
+                          },
+                        )),
                     Expanded(
                       child: Text(
-                        'I agree to the Terms of Service and Privacy Policy',
+                        'Saya setuju dengan Syarat dan Ketentuan Layanan',
                         style: AppText.body3(color: Colors.grey),
                       ),
                     ),
@@ -67,23 +74,29 @@ class RegisterView extends GetView<RegisterController> {
                 SizedBox(height: AppResponsive.height(context, 3)),
                 Container(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: controller.register,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppResponsive.width(context, 10),
-                        vertical: AppResponsive.height(context, 2),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Register',
-                      style: AppText.body1(color: Colors.white),
-                    ),
-                  ),
+                  child: Obx(() => ElevatedButton(
+                        onPressed: controller.agreedToTerms.value
+                            ? controller.register
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: controller.agreedToTerms.value
+                              ? AppColors.primary
+                              : Colors.grey,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppResponsive.width(context, 10),
+                            vertical: AppResponsive.height(context, 2),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: controller.isLoading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text(
+                                'Register',
+                                style: AppText.body1(color: Colors.white),
+                              ),
+                      )),
                 ),
               ],
             ),
@@ -93,54 +106,54 @@ class RegisterView extends GetView<RegisterController> {
     );
   }
 
- Widget _buildTextField(
-  String label, {
-  TextInputType keyboardType = TextInputType.text,
-  bool obscureText = false,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      TextFormField(
-        controller: controller.getController(label),
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        style: AppText.body1(color: Colors.black),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: AppText.body2(color: Colors.grey),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: AppColors.primary),
+  Widget _buildTextField(
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller.getController(label),
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          style: AppText.body1(color: Colors.black),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: AppText.body2(color: Colors.grey),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: AppColors.primary),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey),
-          ),
+          validator: (value) {
+            if (label == 'Username') {
+              return controller.validateUsername(value!);
+            }
+            return null;
+          },
         ),
-        validator: (value) {
-          if (label == 'Username') {
-            return controller.validateUsername(value!);
-          }
-          return null;
-        },
-      ),
-      if (label == 'Username') 
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            '• Panjang: 6-20 karakter\n'
-            '• Karakter: Huruf, angka, garis bawah, titik\n'
-            '• Huruf pertama: Tidak boleh angka/simbol\n'
-            '• Kombinasi: Gabungan huruf & angka disarankan\n'
-            '• Unik: Tidak mirip username lain\n'
-            '• Tidak mengandung: Kata tidak pantas, informasi pribadi, atau karakter khusus selain "_" dan "."',
-            style: AppText.caption(color: Colors.grey),
+        if (label == 'Username')
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              '• Panjang: 6-20 karakter\n'
+              '• Karakter: Huruf, angka, garis bawah, titik\n'
+              '• Huruf pertama: Tidak boleh angka/simbol\n'
+              '• Kombinasi: Gabungan huruf & angka disarankan\n'
+              '• Unik: Tidak mirip username lain\n'
+              '• Tidak mengandung: Kata tidak pantas, informasi pribadi, atau karakter khusus selain "_" dan "."',
+              style: AppText.caption(color: Colors.grey),
+            ),
           ),
-        ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildGenderDropdown() {
     return DropdownButtonFormField<String>(

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hajj/app/components/bottom_navbar/widget_bottom_navbar.dart';
+import 'package:hajj/app/routes/app_pages.dart';
 import 'package:hajj/app/utility/app_colors.dart';
+import 'package:hajj/app/utility/app_responsive.dart';
 import 'package:hajj/app/utility/app_text.dart';
+import 'package:intl/intl.dart';
 import '../controllers/dashboard_controller.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -21,7 +25,7 @@ class DashboardView extends GetView<DashboardController> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,6 +50,13 @@ class DashboardView extends GetView<DashboardController> {
                                   )
                                 : null,
                           )),
+                      SizedBox(
+                        width: AppResponsive.width(context, 1),
+                      ),
+                      Image.asset(
+                        'assets/images/logoapp.png',
+                        height: 35,
+                      ),
                       Row(
                         children: [
                           Container(
@@ -71,10 +82,7 @@ class DashboardView extends GetView<DashboardController> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Balance Card dengan gradien orange
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -176,7 +184,9 @@ class DashboardView extends GetView<DashboardController> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.toNamed(Routes.BONUS);
+                                  },
                                   style: TextButton.styleFrom(
                                     backgroundColor:
                                         Colors.white.withOpacity(0.2),
@@ -210,10 +220,7 @@ class DashboardView extends GetView<DashboardController> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Grid Cards Section
                   GridView.count(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -231,19 +238,19 @@ class DashboardView extends GetView<DashboardController> {
                             controller.isLoading.value,
                           )),
                       Obx(() => _buildInfoCard(
-                            'Total Jamaah',
-                            controller.totalJamaah.value.toString(),
-                            Icons.mosque_outlined,
-                            AppColors.orange200,
-                            'Jamaah',
-                            controller.isLoading.value,
-                          )),
-                      Obx(() => _buildInfoCard(
                             'Total Customer',
                             controller.totalCustomer.value.toString(),
                             Icons.group_outlined,
                             AppColors.green,
                             'Customer',
+                            controller.isLoading.value,
+                          )),
+                      Obx(() => _buildInfoCard(
+                            'Saldo Bonus',
+                            controller.saldoBonus.value.toString(),
+                            Icons.credit_card_outlined,
+                            AppColors.orange200,
+                            'Bonus',
                             controller.isLoading.value,
                           )),
                       Obx(() => _buildInfoCard(
@@ -256,27 +263,229 @@ class DashboardView extends GetView<DashboardController> {
                           )),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Recent Transactions
-                  Text('Today', style: AppText.body1(color: Colors.black87)),
-                  const SizedBox(height: 12),
-                  _buildTransactionItem(
-                    'Apple Store',
-                    'Payment at the store',
-                    '-85',
-                    Icons.shopping_bag_outlined,
-                    AppColors.primary,
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/program.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                            AppColors.primary, BlendMode.srcIn),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Program Terbaru',
+                        style: AppText.body1(color: Colors.black87),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                        ),
+                        child: Text(
+                          'Lihat Semua',
+                          style: AppText.caption(color: AppColors.softWhite),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
-                  _buildTransactionItem(
-                    'Bonus',
-                    'Commission received',
-                    '+185',
-                    Icons.account_balance_wallet_outlined,
-                    AppColors.green,
+                  Obx(() => controller.isLoadingPrograms.value
+                      ? Center(child: CircularProgressIndicator())
+                      : SizedBox(
+                          height: AppResponsive.height(context, 25),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: controller.programs.length,
+                            itemBuilder: (context, index) {
+                              final program = controller.programs[index];
+                              return Container(
+                                width: 280,
+                                margin: EdgeInsets.only(right: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.05),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16)),
+                                      child: Image.network(
+                                        program.picture ??
+                                            'https://via.placeholder.com/280x120',
+                                        height: 120,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            program.name,
+                                            style: AppText.body2(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            NumberFormat.currency(
+                                                    locale: 'id',
+                                                    symbol: 'Rp ',
+                                                    decimalDigits: 0)
+                                                .format(program.price),
+                                            style: AppText.body3(
+                                                color: AppColors.primary),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            'Sisa Kursi: ${program.sisaKursi}',
+                                            style: AppText.caption(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )),
+                  SizedBox(height: AppResponsive.height(context, 3)),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/berita.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                            AppColors.primary, BlendMode.srcIn),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Berita',
+                        style: AppText.body1(color: Colors.black87),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                        ),
+                        child: Text(
+                          'Lihat Semua',
+                          style: AppText.caption(color: AppColors.softWhite),
+                        ),
+                      ),
+                    ],
                   ),
+                  SizedBox(
+                    height: AppResponsive.height(context, 2),
+                  ),
+                  Obx(() {
+                    if (controller.isLoadingNews.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppResponsive.width(context, 1),
+                      ),
+                      itemCount: controller.news.length > 3
+                          ? 3
+                          : controller.news.length,
+                      itemBuilder: (context, index) {
+                        final news = controller.news[index];
+                        return GestureDetector(
+                          onTap: () {},
+                          child: Hero(
+                            tag: 'news-${news.id}',
+                            child: Material(
+                              color: Colors.transparent,
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 300),
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius:
+                                          const BorderRadius.horizontal(
+                                        left: Radius.circular(8),
+                                      ),
+                                      child: Image.network(
+                                        '${news.picture}',
+                                        height: 110,
+                                        width: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Container(
+                                          height: 100,
+                                          width: 100,
+                                          color: Colors.grey[300],
+                                          child: const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              news.name,
+                                              style: AppText.body2(),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              controller
+                                                  .formatDate(news.createdAt!),
+                                              style: AppText.caption(
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
@@ -290,6 +499,7 @@ class DashboardView extends GetView<DashboardController> {
   Widget _buildInfoCard(String title, String amount, IconData icon, Color color,
       String label, bool isLoading) {
     return Container(
+      height: 140,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -312,23 +522,28 @@ class DashboardView extends GetView<DashboardController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(icon, size: 24, color: color),
-                    ),
-                  ],
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, size: 24, color: color),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  amount,
-                  style: AppText.heading4(color: Colors.black87),
+                Expanded(
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        amount,
+                        style: amount.length > 15
+                            ? AppText.heading4(color: Colors.black87)
+                            : amount.length > 12
+                                ? AppText.heading3(color: Colors.black87)
+                                : AppText.heading2(color: Colors.black87),
+                      ),
+                    ),
+                  ),
                 ),
                 Text(
                   title,

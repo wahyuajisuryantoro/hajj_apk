@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:hajj/app/utility/app_colors.dart';
+import 'package:hajj/app/utility/app_responsive.dart';
+import 'package:hajj/app/utility/app_text.dart';
+
+import '../controllers/syarat_ketentuan_controller.dart';
+
+class SyaratKetentuanView extends GetView<SyaratKetentuanController> {
+  const SyaratKetentuanView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.softWhite,
+      appBar: AppBar(
+        title: Text(
+          'Syarat dan Ketentuan',
+          style: AppText.heading4(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppResponsive.width(context, 5),
+              vertical: 20,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Obx(() => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/images/logoapp.png',
+                      height: 60,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Syarat dan Ketentuan',
+                      style: AppText.heading3(color: AppColors.primary),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      controller.termsContent.value,
+                      style: AppText.body2(color: Colors.black87),
+                    ),
+                  ],
+                )),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

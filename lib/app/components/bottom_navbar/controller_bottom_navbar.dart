@@ -13,7 +13,7 @@ class BottomNavigationController extends GetxController {
     Routes.DASHBOARD,
     Routes.MITRA,
     Routes.CUSTOMER,
-    Routes.JAMAAH,
+    Routes.BONUS,
     Routes.AKUN,
   ];
 
@@ -22,7 +22,7 @@ class BottomNavigationController extends GetxController {
     'Dashboard',
     'Mitra',
     'Customer',
-    'Jamaah',
+    'Bonus',
     'Akun'
   ];
 

@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 
 import '../modules/akun/bindings/akun_binding.dart';
 import '../modules/akun/views/akun_view.dart';
+import '../modules/akun_password_edit/bindings/akun_password_edit_binding.dart';
+import '../modules/akun_password_edit/views/akun_password_edit_view.dart';
+import '../modules/akun_profile_edit/bindings/akun_profile_edit_binding.dart';
+import '../modules/akun_profile_edit/views/akun_profile_edit_view.dart';
 import '../modules/berita-detail/bindings/berita_detail_binding.dart';
 import '../modules/berita-detail/views/berita_detail_view.dart';
 import '../modules/berita_all/bindings/berita_all_binding.dart';
@@ -18,6 +22,10 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/jamaah/bindings/jamaah_binding.dart';
 import '../modules/jamaah/views/jamaah_view.dart';
+import '../modules/jamaah_list/bindings/jamaah_list_binding.dart';
+import '../modules/jamaah_list/views/jamaah_list_view.dart';
+import '../modules/kebijakan_privasi/bindings/kebijakan_privasi_binding.dart';
+import '../modules/kebijakan_privasi/views/kebijakan_privasi_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/mitra/bindings/mitra_binding.dart';
@@ -30,6 +38,8 @@ import '../modules/program-detail/bindings/program_detail_binding.dart';
 import '../modules/program-detail/views/program_detail_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/syarat_ketentuan/bindings/syarat_ketentuan_binding.dart';
+import '../modules/syarat_ketentuan/views/syarat_ketentuan_view.dart';
 
 part 'app_routes.dart';
 
@@ -120,6 +130,31 @@ class AppPages {
       name: _Paths.REGISTER,
       page: () => const RegisterView(),
       binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: _Paths.AKUN_PROFILE_EDIT,
+      page: () => const AkunProfileEditView(),
+      binding: AkunProfileEditBinding(),
+    ),
+    GetPage(
+      name: _Paths.AKUN_PASSWORD_EDIT,
+      page: () => const AkunPasswordEditView(),
+      binding: AkunPasswordEditBinding(),
+    ),
+    GetPage(
+      name: _Paths.JAMAAH_LIST,
+      page: () => const JamaahListView(),
+      binding: JamaahListBinding(),
+    ),
+    GetPage(
+      name: _Paths.SYARAT_KETENTUAN,
+      page: () => const SyaratKetentuanView(),
+      binding: SyaratKetentuanBinding(),
+    ),
+    GetPage(
+      name: _Paths.KEBIJAKAN_PRIVASI,
+      page: () => const KebijakanPrivasiView(),
+      binding: KebijakanPrivasiBinding(),
     ),
   ];
 }

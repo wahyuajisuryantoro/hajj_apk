@@ -36,13 +36,7 @@ class LoginView extends GetView<LoginController> {
                 'assets/images/logoapp.png',
                 width: AppResponsive.width(context, 70),
               ),
-              SizedBox(height: AppResponsive.height(context, 4)),
-              Text(
-                'Selamat Datang, Mitra HAJJ',
-                textAlign: TextAlign.center,
-                style: AppText.heading3(color: Colors.white),
-              ),
-              SizedBox(height: AppResponsive.height(context, 2)),
+              SizedBox(height: AppResponsive.height(context, 9)),
               TextFormField(
                 controller: controller.usernameController,
                 decoration: InputDecoration(
@@ -103,23 +97,25 @@ class LoginView extends GetView<LoginController> {
               SizedBox(height: AppResponsive.height(context, 4)),
               Container(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: controller.login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppResponsive.width(context, 20),
-                      vertical: AppResponsive.height(context, 2),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    'Login',
-                    style: AppText.body1(color: Colors.white),
-                  ),
-                ),
+                child: Obx(() => ElevatedButton(
+                      onPressed: controller.login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppResponsive.width(context, 20),
+                          vertical: AppResponsive.height(context, 2),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: controller.isLoading.value
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              'Login',
+                              style: AppText.body1(color: Colors.white),
+                            ),
+                    )),
               ),
               SizedBox(height: AppResponsive.height(context, 2)),
               Row(

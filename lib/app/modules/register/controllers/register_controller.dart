@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hajj/app/routes/app_pages.dart';
+import 'package:hajj/app/utility/app_colors.dart';
+import 'package:hajj/app/utility/app_text.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterController extends GetxController {
@@ -13,6 +16,8 @@ class RegisterController extends GetxController {
 
   // Sex selection
   var selectedSex = 'L'.obs;
+  var isLoading = false.obs;
+  var agreedToTerms = false.obs;
 
   // Method for registration
   Future<void> register() async {
@@ -20,11 +25,36 @@ class RegisterController extends GetxController {
     String password = passwordController.text.trim();
     String name = nameController.text.trim();
     String phone = phoneController.text.trim();
+    
 
     if (username.isEmpty || password.isEmpty || name.isEmpty || phone.isEmpty) {
-      Get.snackbar('Error', 'Mohon isi semua field');
+      Get.snackbar(
+        'Error',
+        'Mohon isi semua field',
+        backgroundColor: AppColors.softOrange,
+        colorText: Colors.black,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20),
+        borderRadius: 10,
+      );
       return;
     }
+ 
+     if (!agreedToTerms.value) {
+      Get.snackbar(
+        'Error',
+        'Mohon baca dan setujui syarat dan ketentuan layanan',
+        backgroundColor: AppColors.softOrange,
+        colorText: Colors.black,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20),
+        borderRadius: 10,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+
     try {
       final response = await http.post(
         Uri.parse('http://hajj.web.id/api/register'),
@@ -40,12 +70,39 @@ class RegisterController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        Get.snackbar('Berhasil', data['message']);
+        Get.snackbar(
+          'Berhasil',
+          data['message'],
+          backgroundColor: AppColors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20),
+          borderRadius: 10,
+          duration: const Duration(seconds: 2),
+        );
+        await Future.delayed(const Duration(seconds: 2));
+        Get.offAllNamed(Routes.LOGIN);
       } else {
-        Get.snackbar('Error', 'Registrasi gagal');
+        Get.snackbar(
+          'Error',
+          'Registrasi gagal',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(20),
+          borderRadius: 10,
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(20),
+        borderRadius: 10,
+      );
     }
   }
 
@@ -62,16 +119,15 @@ class RegisterController extends GetxController {
     return null;
   }
 
-  // Get controller for different fields dynamically
   TextEditingController getController(String label) {
-    switch (label.toLowerCase()) {
-      case 'username':
+    switch (label) {
+      case 'Username':
         return usernameController;
-      case 'password':
+      case 'Password':
         return passwordController;
-      case 'full name':
+      case 'Nama Panjang':
         return nameController;
-      case 'phone':
+      case 'Phone':
         return phoneController;
       default:
         return TextEditingController();

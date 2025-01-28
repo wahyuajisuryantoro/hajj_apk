@@ -3,8 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hajj/app/data/models/Berita.dart';
+import 'package:hajj/app/data/models/Program.dart';
 import 'package:hajj/app/data/services/storage_services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class DashboardController extends GetxController {
   final StorageService _storage = StorageService();
@@ -16,12 +19,20 @@ class DashboardController extends GetxController {
   RxInt totalJamaah = 0.obs;
   RxInt totalCustomer = 0.obs;
   RxString totalBonus = 'Rp 0'.obs;
+  RxString saldoBonus = 'Rp 0'.obs;
+
+  final programs = <Program>[].obs;
+  final news = <Berita>[].obs;
+  final isLoadingPrograms = false.obs;
+  final isLoadingNews = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     loadMitraData();
     fetchDashboardData();
+    fetchPrograms();
+    fetchNews();
     refreshData();
     updateGreeting();
   }
@@ -60,7 +71,12 @@ class DashboardController extends GetxController {
         totalMitra.value = data['data']['total_mitra'] ?? 0;
         totalJamaah.value = data['data']['total_jamaah'] ?? 0;
         totalCustomer.value = data['data']['total_customer'] ?? 0;
-        totalBonus.value = 'Rp ${data['data']['total_bonus']}';
+        totalBonus.value =
+            NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                .format(int.parse(data['data']['total_bonus'].toString()));
+        saldoBonus.value =
+            NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                .format(int.parse(data['data']['saldo_bonus'].toString()));
       } else {
         Get.snackbar(
             'Error', data['message'] ?? 'Terjadi kesalahan saat mengambil data',
@@ -72,6 +88,52 @@ class DashboardController extends GetxController {
           backgroundColor: Colors.red, colorText: Colors.white);
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchPrograms() async {
+    try {
+      isLoadingPrograms.value = true;
+      final response = await http.get(
+        Uri.parse('https://hajj.web.id/api/programs?limit=5'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['data'] != null) {
+          programs.assignAll((data['data'] as List)
+              .map((json) => Program.fromJson(json))
+              .toList());
+        }
+      }
+    } catch (e) {
+      print('Error fetching programs: $e');
+    } finally {
+      isLoadingPrograms.value = false;
+    }
+  }
+
+  Future<void> fetchNews() async {
+    try {
+      isLoadingNews.value = true;
+      final response =
+          await http.get(Uri.parse('https://hajj.web.id/api/all-news'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final List<dynamic> data = responseData['news']['data'];
+        news.assignAll(data.map((json) => Berita.fromJson(json)).toList());
+      } else {
+        print('Failed to fetch news. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching news: $e');
+    } finally {
+      isLoadingNews.value = false;
     }
   }
 
@@ -152,5 +214,9 @@ class DashboardController extends GetxController {
 
   void onClose() {
     super.onClose();
+  }
+
+  String formatDate(DateTime date) {
+    return DateFormat('dd MMM yyyy', 'id').format(date);
   }
 }
