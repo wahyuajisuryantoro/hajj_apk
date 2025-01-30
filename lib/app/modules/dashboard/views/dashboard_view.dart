@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:hajj/app/components/bottom_navbar/controller_bottom_navbar.dart';
 import 'package:hajj/app/components/bottom_navbar/widget_bottom_navbar.dart';
 import 'package:hajj/app/routes/app_pages.dart';
 import 'package:hajj/app/utility/app_colors.dart';
@@ -28,8 +29,10 @@ class DashboardView extends GetView<DashboardController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, // Atur supaya anak-anak Row terpusat
                     children: [
+                      // Avatar di kiri
                       Obx(() => CircleAvatar(
                             backgroundColor: AppColors.primary,
                             radius: 20,
@@ -51,34 +54,33 @@ class DashboardView extends GetView<DashboardController> {
                                 : null,
                           )),
                       SizedBox(
-                        width: AppResponsive.width(context, 1),
+                        width: AppResponsive.width(context, 0.1),
                       ),
-                      Image.asset(
-                        'assets/images/logoapp.png',
-                        height: 35,
+                      Expanded(
+                        child: Center(
+                          child: Image.asset(
+                            'assets/images/logoapp.png',
+                            height: 40,
+                          ),
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppColors.softOrange,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.notifications_outlined,
-                                color: AppColors.primary),
+                      SizedBox(
+                        width: AppResponsive.width(context, 0.1),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          BottomNavigationController.to
+                              .navigateToRoute(Routes.AKUN);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.softOrange,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppColors.softOrange,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.settings_outlined,
-                                color: AppColors.primary),
-                          ),
-                        ],
+                          child: Icon(Icons.settings_outlined,
+                              color: AppColors.primary),
+                        ),
                       ),
                     ],
                   ),
@@ -280,7 +282,9 @@ class DashboardView extends GetView<DashboardController> {
                       ),
                       Spacer(),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.DASHBOARD_ALL_PROGRAM);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                         ),
@@ -315,52 +319,59 @@ class DashboardView extends GetView<DashboardController> {
                                     ),
                                   ],
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16)),
-                                      child: Image.network(
-                                        program.picture ??
-                                            'https://via.placeholder.com/280x120',
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.toNamed(Routes.DASHBOARD_DETAIL_PROGRAM,
+                                        arguments: program.code);
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16)),
+                                        child: Image.network(
+                                          program.picture ??
+                                              'https://via.placeholder.com/280x120',
+                                          height: 120,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            program.name,
-                                            style: AppText.body2(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            NumberFormat.currency(
-                                                    locale: 'id',
-                                                    symbol: 'Rp ',
-                                                    decimalDigits: 0)
-                                                .format(program.price),
-                                            style: AppText.body3(
-                                                color: AppColors.primary),
-                                          ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            'Sisa Kursi: ${program.sisaKursi}',
-                                            style: AppText.caption(
-                                                color: Colors.black54),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                      Padding(
+                                        padding: EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              program.name,
+                                              style: AppText.body2(),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              NumberFormat.currency(
+                                                      locale: 'id',
+                                                      symbol: 'Rp ',
+                                                      decimalDigits: 0)
+                                                  .format(program.price),
+                                              style: AppText.body3(
+                                                  color: AppColors.primary),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Sisa Kursi: ${program.sisaKursi}',
+                                              style: AppText.caption(
+                                                  color: Colors.black54),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -383,7 +394,9 @@ class DashboardView extends GetView<DashboardController> {
                       ),
                       Spacer(),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.DASHBOARD_ALL_BERITA);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                         ),
@@ -401,6 +414,7 @@ class DashboardView extends GetView<DashboardController> {
                     if (controller.isLoadingNews.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
+
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -413,7 +427,10 @@ class DashboardView extends GetView<DashboardController> {
                       itemBuilder: (context, index) {
                         final news = controller.news[index];
                         return GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.DASHBOARD_DETAIL_BERITA,
+                                arguments: news.id);
+                          },
                           child: Hero(
                             tag: 'news-${news.id}',
                             child: Material(

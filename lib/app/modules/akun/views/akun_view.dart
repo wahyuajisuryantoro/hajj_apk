@@ -175,9 +175,6 @@ class AkunView extends GetView<AkunController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Pengaturan Akun',
-              style: AppText.body1(color: AppColors.primary)),
-          const SizedBox(height: 16),
           _buildMenuCard(
             svgIconPath: 'assets/icons/password-setting.svg',
             title: 'Password Settings',
@@ -206,19 +203,20 @@ class AkunView extends GetView<AkunController> {
               Get.toNamed(Routes.SYARAT_KETENTUAN);
             },
           ),
+           _buildMenuCard(
+            svgIconPath: 'assets/icons/faq.svg',
+            title: 'Pertanyaan yang Sering Diajukan',
+            onTap: () {
+              Get.toNamed(Routes.FAQ);
+            },
+          ),
           const SizedBox(height: 24),
           _buildActionButton(
             title: 'Logout',
-            color: AppColors.orange200,
+            color: AppColors.red,
             onTap: () {
               controller.logout();
             },
-          ),
-          const SizedBox(height: 12),
-          _buildActionButton(
-            title: 'Hapus Akun',
-            color: Colors.red,
-            onTap: () {},
           ),
         ],
       ),

@@ -1,11 +1,9 @@
-// lib/components/bottom_navbar/controllers/bottom_navigation_controller.dart
 import 'package:get/get.dart';
 import 'package:hajj/app/routes/app_pages.dart';
 
-
 class BottomNavigationController extends GetxController {
   static BottomNavigationController get to => Get.find();
-  
+
   final RxInt selectedIndex = 0.obs;
 
   // Mapping routes untuk setiap index
@@ -26,11 +24,22 @@ class BottomNavigationController extends GetxController {
     'Akun'
   ];
 
-  void changePage(int index) {
+  void changePage(int index, {bool useOffAll = true}) {
     selectedIndex.value = index;
-    // Navigasi ke route yang sesuai
-    Get.offAllNamed(indexToRoute[index]);
+    if (useOffAll) {
+      Get.offAllNamed(indexToRoute[index]);
+    } else {
+      Get.toNamed(indexToRoute[index]);
+    }
   }
+
+  void navigateToRoute(String route) {
+  int index = indexToRoute.indexOf(route);
+  if (index != -1) {
+    selectedIndex.value = index;
+    Get.toNamed(route);
+  }
+}
 
   // Method untuk mendapatkan index dari route
   int getIndexFromRoute(String route) {

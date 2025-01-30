@@ -59,7 +59,7 @@ class CustomBottomNavigationBar extends GetView<BottomNavigationController> {
         case Routes.CUSTOMER:
           return 'assets/icons/customer.svg';
         case Routes.BONUS:
-          return 'assets/icons/bonus.svg';
+          return 'assets/icons/rupiah.svg';
         case Routes.AKUN:
           return 'assets/icons/akun.svg';
         default:

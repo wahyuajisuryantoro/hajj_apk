@@ -24,6 +24,11 @@ abstract class Routes {
   static const JAMAAH_LIST = _Paths.JAMAAH_LIST;
   static const SYARAT_KETENTUAN = _Paths.SYARAT_KETENTUAN;
   static const KEBIJAKAN_PRIVASI = _Paths.KEBIJAKAN_PRIVASI;
+  static const DASHBOARD_ALL_BERITA = _Paths.DASHBOARD_ALL_BERITA;
+  static const DASHBOARD_DETAIL_BERITA = _Paths.DASHBOARD_DETAIL_BERITA;
+  static const DASHBOARD_ALL_PROGRAM = _Paths.DASHBOARD_ALL_PROGRAM;
+  static const DASHBOARD_DETAIL_PROGRAM = _Paths.DASHBOARD_DETAIL_PROGRAM;
+  static const FAQ = _Paths.FAQ;
 }
 
 abstract class _Paths {
@@ -50,4 +55,9 @@ abstract class _Paths {
   static const JAMAAH_LIST = '/jamaah-list';
   static const SYARAT_KETENTUAN = '/syarat-ketentuan';
   static const KEBIJAKAN_PRIVASI = '/kebijakan-privasi';
+  static const DASHBOARD_ALL_BERITA = '/dashboard-all-berita';
+  static const DASHBOARD_DETAIL_BERITA = '/dashboard-detail-berita';
+  static const DASHBOARD_ALL_PROGRAM = '/dashboard-all-program';
+  static const DASHBOARD_DETAIL_PROGRAM = '/dashboard-detail-program';
+  static const FAQ = '/faq';
 }

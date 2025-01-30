@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hajj/app/components/bottom_navbar/controller_bottom_navbar.dart';
 import 'package:hajj/app/data/services/storage_services.dart';
 import 'package:hajj/app/routes/app_pages.dart';
 import 'package:hajj/app/utility/app_colors.dart';
@@ -59,7 +60,9 @@ class AkunController extends GetxController {
         ElevatedButton(
           onPressed: () async {
             try {
-              await _storage.clearMitraData(); 
+              await _storage.clearMitraData();
+              final bottomNavController = Get.find<BottomNavigationController>();
+              bottomNavController.selectedIndex.value = 0;
               Get.offAllNamed(Routes.LOGIN);
             } catch (e) {
               print('Error during logout: $e');
@@ -89,6 +92,8 @@ class AkunController extends GetxController {
         ? '${nameParts[0][0]}${nameParts[1][0]}'.toUpperCase()
         : nameParts[0].substring(0, min(2, nameParts[0].length)).toUpperCase();
   }
+
+  
 
   @override
   void onReady() {
